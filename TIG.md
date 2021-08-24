@@ -167,4 +167,28 @@ ufw allow 3000
 
 <img src= "https://github.com/tulha161/TIG/blob/main/picture/2.PNG">
 
+## 2.4. Cấu hình Grafana : 
+### Thêm InfluxDB làm datasource : 
+- Trên giao diện Grafana, chọn Configuration -> Data Sources -> Add data source
+- Tìm và add **InfluxDB**, fill các trường sau : 
+<img src= "https://github.com/tulha161/TIG/blob/main/picture/3.PNG">
+    - 1. Tên DB
+    - 2. URL : ở đây mình cài trên cùng 1 server nên là `http://localhost:8086` 
+    - 3. Cài đặt các phương thức xác thực
+    - 4. User xác thực, nhập tài khoản `admin` cùa InfluxDB và mật khẩu
+    - 5. DB sẽ lấy, ta dùng `telegraf` nên điền tên db, user, password đã tạo ở phần trên 
+- Sau khi fill đủ các trường trên, chọn `Save & Test` 
 
+
+### Thêm Dashboard : 
+- Tìm các loại dashboard muốn dùng tại trang : https://grafana.com/grafana/dashboards?orderBy=name&direction=asc
+- Ở đây mình dùng : https://grafana.com/grafana/dashboards/61
+- Copy ID của Dashboard này để phục vụ việc Import, ID của nó là `61` 
+<img src= "https://github.com/tulha161/TIG/blob/main/picture/4.PNG">
+- Chọn import, fill id `61` vào mục `grafana.com dashboard URL or ID` , có thể fill id hoặc url trực tiếp cũng ok. Sau đó chọn `Load`.
+<img src= "https://github.com/tulha161/TIG/blob/main/picture/5.PNG">
+- Fill Name, chọn Folder và Source DB ( InfluxDB đã thêm ở step trên) rồi Import.
+- Hình ảnh Dashboard đã được thêm thành công : 
+<img src= "https://github.com/tulha161/TIG/blob/main/picture/6.PNG">
+- Kiểm tra các collector đã được config tại phần `2.2` ở mục `System`, ngoài ra Dashboard này còn phục vụ hiển thị trạng thái của khá nhiều Service khác như : MYSQL, Mongo, Redis, ... 
+<img src= "https://github.com/tulha161/TIG/blob/main/picture/7.PNG">
