@@ -9,4 +9,159 @@
     - **Telegraf** đóng vai trò agent thu thập số liệu hệ thống, cũng như dịch vụ trên hệ thống đang chạy
     - Sau khi thu thập số liệu, chúng được đưa vào **InfluxDB** - đóng vai trò làm nơi lưu trữ.
     - Từ **InfluxDB**, dữ liệu được đưa lên **Grafana**, nơi chúng được hiển thị theo dạng các đồ thị trực quan. 
-    <img src= "https://imgur.com/a/lOIuMNC">
+    <img src= "1.PNG">
+
+# 2. Cài đặt: 
+## Cấu hình cài đặt :
+- OS : Ubuntu 18.04
+- IP : 10.5.10.98
+
+## 2.1. Cài đặt InfluxDB : 
+- thêm Influxdata key : 
+`wget -qO- https://repos.influxdata.com/influxdb.key | apt-key add -`
+- Thêm repo influxdata và update lại :
+```
+source /etc/lsb-release
+
+echo "deb https://repos.influxdata.com/${DISTRIB_ID,,} ${DISTRIB_CODENAME} stable" | tee /etc/apt/sources.list.d/influxdb.list
+
+apt update -y
+```
+- Cài đặt gói InfluxDB : 
+`apt install influxdb curl -y`
+- Khởi động gói : 
+`systemctl enable --now influxdb`
+- Kiểm tra dịch vụ và version 
+```
+systemctl status influxdb
+influx -version
+```
+- Kiểm tra và mở port cho InfluxDB : 
+```
+ufw allow 8086
+
+ufw allow 8088
+```
+
+### Cấu hình InfluxDB:
+- Như vậy là đã xong phần cài đặt, giờ chuyển sang cấu hình
+- File cấu hình đặt tại `/etc/influxdb/influxdb.conf`, chỉnh sửa file này lưu ý các trường trong tag `[http]` : 
+```
+[http]
+# Determines whether HTTP endpoint is enabled.
+enabled = true
+
+# Determines whether the Flux query endpoint is enabled.
+flux-enabled = true
+
+# The bind address used by the HTTP service.
+bind-address = ":8086"
+
+# Determines whether HTTP request logging is enabled.
+log-enabled = true
+```
+- Vào shell InfluxDB bằng cách nhập lệnh `influx`, tại đây tạo db và user cho **telegraf**: 
+```
+   > create database telegraf
+   > create user telegraf with password 'tele.123' with all privileges
+```
+- Kiểm tra bằng lệnh
+``` 
+ > show databases
+ > show users
+```
+
+## 2.2. Cài đặt Telegraf Agent: 
+- Download gói cài và cài đặt :
+```
+wget https://dl.influxdata.com/telegraf/releases/telegraf_1.14.2-1_amd64.deb
+sudo dpkg -i telegraf_1.14.2-1_amd64.deb
+```
+- Khởi động dịch vụ và check :
+```
+systemctl enable --now telegraf
+systemctl status telegraf
+```
+### Cấu hình telegraf agent : 
+- file cấu hình đặt tại `/etc/telegraf/telegraf.conf`, chỉnh sửa như sau : 
+```
+hostname = "tule-TIG"
+
+urls = ["http://10.5.10.98:8086"]
+
+database = "telegraf"
+
+username = "telegraf"
+
+password = "tele.123"
+
+[[inputs.cpu]]
+
+percpu = true
+
+totalcpu = true
+
+collect_cpu_time = false
+
+report_active = false
+
+[[inputs.disk]]
+
+ignore_fs = ["tmpfs", "devtmpfs", "devfs", "iso9660", "overlay", "aufs", "squashfs"]
+
+[[inputs.diskio]]
+
+[[inputs.kernel]]
+
+[[inputs.mem]]
+
+[[inputs.processes]]
+
+[[inputs.swap]]
+
+[[inputs.system]]
+
+[[inputs.net]]
+
+[[inputs.netstat]]
+```
+- Phần này liên quan đến khai báo database cũng như config lại các thông số check của telegraf. Sau khi khai báo xong, restart dịch vụ : ` systemctl restart telegraf`
+
+
+## 2.3. Cài đặt Grafana : 
+- update và cài đặt các gói cần thiết :
+```
+apt-get install -y apt-transport-https
+
+apt-get install -y software-properties-common wget
+
+apt-get update
+
+apt-get upgrade
+
+reboot
+```
+- Add key vào các gói cài : 
+wget -q -O - https://packages.grafana.com/gpg.key | apt-key add -
+
+add-apt-repository "deb https://packages.grafana.com/oss/deb stable main"
+```
+
+- Update repo và cài đặt : 
+```
+apt-get update
+
+apt-get install -y grafana
+```
+- Khởi động dịch vụ và kiểm tra : 
+```
+systemctl enable --now grafana-server
+systemctl status grafana-server
+```
+- Mở port 3000 để chạy dịch vụ : 
+```
+ufw allow 3000
+```
+- Cài đặt đã thành công, truy cập vào site bằng `<YourServerIP>:3000` để vào web interface với mật khẩu mặc định admin/admin
+
+
