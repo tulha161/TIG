@@ -9,7 +9,7 @@
     - **Telegraf** đóng vai trò agent thu thập số liệu hệ thống, cũng như dịch vụ trên hệ thống đang chạy
     - Sau khi thu thập số liệu, chúng được đưa vào **InfluxDB** - đóng vai trò làm nơi lưu trữ.
     - Từ **InfluxDB**, dữ liệu được đưa lên **Grafana**, nơi chúng được hiển thị theo dạng các đồ thị trực quan. 
-    <img src= "1.PNG">
+    <img src= "https://github.com/tulha161/TIG/blob/main/picture/1.PNG">
 
 # 2. Cài đặt: 
 ## Cấu hình cài đặt :
@@ -141,7 +141,8 @@ apt-get upgrade
 
 reboot
 ```
-- Add key vào các gói cài : 
+- Add key vào các gói cài :
+``` 
 wget -q -O - https://packages.grafana.com/gpg.key | apt-key add -
 
 add-apt-repository "deb https://packages.grafana.com/oss/deb stable main"
@@ -163,5 +164,7 @@ systemctl status grafana-server
 ufw allow 3000
 ```
 - Cài đặt đã thành công, truy cập vào site bằng `<YourServerIP>:3000` để vào web interface với mật khẩu mặc định admin/admin
+
+<img src= "https://github.com/tulha161/TIG/blob/main/picture/2.PNG">
 
 
