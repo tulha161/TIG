@@ -83,6 +83,7 @@ systemctl enable --now telegraf
 systemctl status telegraf
 ```
 ### Cấu hình telegraf agent : 
+- **LƯU Ý** : đây là thao tác tại mỗi host muôn thêm vào để telegraf thu thập thông tin đẩy sang InfluxDB, vì vậy nên khi thêm các host khác, cần fill 4 trường thông tin: *urls, db name, us name, passw* và cấu hình chi tiết các thông tin cần check là được ! 
 - file cấu hình đặt tại `/etc/telegraf/telegraf.conf`, chỉnh sửa như sau : 
 ```
 hostname = "tule-TIG"
@@ -192,3 +193,5 @@ ufw allow 3000
 <img src= "https://github.com/tulha161/TIG/blob/main/picture/6.png">
 - Kiểm tra các collector đã được config tại phần `2.2` ở mục `System`, ngoài ra Dashboard này còn phục vụ hiển thị trạng thái của khá nhiều Service khác như : MYSQL, Mongo, Redis, ... 
 <img src= "https://github.com/tulha161/TIG/blob/main/picture/7.png">
+
+- 
