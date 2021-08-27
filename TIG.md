@@ -207,4 +207,4 @@ ufw allow 3000
 
 - Để thêm Server vào hệ thống cảnh báo, ta cần cài đặt telegraf agent nơi máy trạm, cấu hình hostname, các thông số muốn monitor và trỏ nó tới InfluxDB. Ví dụ ở đây mình add thêm host **db** và monitor vài input về mysql của nó : 
 
-<8.png>
+<img src= "https://github.com/tulha161/TIG/blob/main/picture/8.png">
