@@ -204,3 +204,7 @@ ufw allow 3000
 
 - Kiểm tra các collector đã được config tại phần `2.2` ở mục `System`, ngoài ra Dashboard này còn phục vụ hiển thị trạng thái của khá nhiều Service khác như : MYSQL, Mongo, Redis, ... 
 <img src= "https://github.com/tulha161/TIG/blob/main/picture/7.png">
+
+- Để thêm Server vào hệ thống cảnh báo, ta cần cài đặt telegraf agent nơi máy trạm, cấu hình hostname, các thông số muốn monitor và trỏ nó tới InfluxDB. Ví dụ ở đây mình add thêm host **db** và monitor vài input về mysql của nó : 
+
+<8.png>
